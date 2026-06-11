@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>{% block title %}VENTE Clothing{% endblock %}</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --black: #0e0e0c;
+      --white: #f7f4ef;
+      --cream: #ede9e0;
+      --warm-mid: #b8a99a;
+      --accent: #c4491a;
+      --text-muted: #7a7068;
+      --serif: 'Cormorant Garamond', Georgia, serif;
+      --sans: 'DM Sans', system-ui, sans-serif;
+    }
+    html { scroll-behavior: smooth; }
+    body { background: var(--white); color: var(--black); font-family: var(--sans); font-weight: 300; overflow-x: hidden; }
+
+    /* HEADER */
+    header {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1.2rem 3rem;
+      background: var(--white);
+      border-bottom: 1px solid rgba(14,14,12,0.1);
+      box-shadow: 0 1px 20px rgba(14,14,12,0.06);
+    }
+    .logo { font-family: var(--serif); font-size: 1.9rem; font-weight: 300; letter-spacing: 0.35em; text-decoration: none; color: var(--black); }
+    .header-right { display: flex; align-items: center; gap: 2rem; }
+    nav { display: flex; gap: 2.5rem; align-items: center; }
+    nav a { font-size: 0.78rem; letter-spacing: 0.15em; text-transform: uppercase; text-decoration: none; color: var(--black); position: relative; padding-bottom: 2px; }
+    nav a::after { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 1px; background: var(--accent); transform: scaleX(0); transform-origin: left; transition: transform 0.3s ease; }
+    nav a:hover::after, nav a.active::after { transform: scaleX(1); }
+    .cart-btn {
+      display: flex; align-items: center; gap: 0.45rem;
+      text-decoration: none; color: var(--black);
+      font-size: 0.78rem; letter-spacing: 0.12em; text-transform: uppercase;
+      padding: 0.5rem 1.1rem; border: 1px solid rgba(14,14,12,0.25);
+      transition: background 0.25s, color 0.25s, border-color 0.25s; position: relative;
+    }
+    .cart-btn:hover { background: var(--black); color: var(--white); border-color: var(--black); }
+    .cart-btn svg { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 1.5; flex-shrink: 0; }
+    .cart-count {
+      display: inline-flex; align-items: center; justify-content: center;
+      background: var(--accent); color: #fff; border-radius: 50%;
+      width: 18px; height: 18px; font-size: 0.62rem; font-weight: 500;
+      margin-left: 2px;
+    }
+    .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; padding: 4px; text-decoration: none; }
+    .hamburger span { width: 24px; height: 1px; background: var(--black); display: block; }
+
+    /* MOBILE NAV */
+    .mobile-nav {
+      display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+      background: var(--black); z-index: 200;
+      flex-direction: column; align-items: center; justify-content: center; gap: 2.5rem;
+      opacity: 0; transition: opacity 0.35s;
+    }
+    .mobile-nav.open { display: flex; opacity: 1; }
+    .mobile-nav a { font-family: var(--serif); font-size: 2.5rem; font-weight: 300; color: var(--white); text-decoration: none; letter-spacing: 0.1em; }
+    .mobile-nav a:hover { color: var(--warm-mid); }
+    .mobile-close { position: absolute; top: 1.4rem; right: 2.5rem; background: none; border: none; color: var(--white); font-size: 2rem; cursor: pointer; line-height: 1; }
+
+    /* FLASH MESSAGES */
+    .flash-messages { position: fixed; top: 5rem; right: 1.5rem; z-index: 500; display: flex; flex-direction: column; gap: 0.5rem; }
+    .flash-msg {
+      padding: 0.75rem 1.4rem; font-size: 0.82rem; letter-spacing: 0.05em;
+      animation: fadeUp 0.3s ease; max-width: 340px;
+    }
+    .flash-msg.success { background: var(--black); color: var(--white); }
+    .flash-msg.error   { background: #c0392b; color: #fff; }
+
+    /* FOOTER */
+    footer {
+      background: var(--black); color: var(--white);
+      padding: 3rem; display: flex; align-items: center;
+      justify-content: space-between; flex-wrap: wrap; gap: 1rem;
+    }
+    .footer-logo { font-family: var(--serif); font-size: 1.4rem; font-weight: 300; letter-spacing: 0.35em; }
+    .footer-copy { font-size: 0.75rem; color: var(--warm-mid); letter-spacing: 0.08em; }
+    .footer-links { display: flex; gap: 2rem; flex-wrap: wrap; }
+    .footer-links a { font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--warm-mid); text-decoration: none; transition: color 0.2s; }
+    .footer-links a:hover { color: var(--white); }
+
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes scrollDrop { 0%, 100% { opacity: 0; transform: scaleY(0); transform-origin: top; } 50% { opacity: 1; transform: scaleY(1); } }
+
+    @media (max-width: 768px) {
+      header { padding: 1rem 1.5rem; }
+      nav { display: none; }
+      .hamburger { display: flex; }
+      .cart-btn span.cart-label { display: none; }
+      footer { flex-direction: column; text-align: center; }
+      .footer-links { justify-content: center; }
+    }
+  </style>
+  {% block extra_css %}{% endblock %}
+</head>
+<body>
+
+<!-- HEADER -->
+<header id="site-header">
+  <a href="{{ url_for('index') }}" class="logo">VENTE</a>
+  <div class="header-right">
+    <nav>
+      <a href="{{ url_for('index') }}" {% if request.endpoint == 'index' %}class="active"{% endif %}>Home</a>
+      <a href="{{ url_for('index') }}#features">About</a>
+      <a href="{{ url_for('index') }}#reviews">Reviews</a>
+      <a href="{{ url_for('index') }}#contact">Contact</a>
+      <a href="{{ url_for('products') }}" {% if request.endpoint == 'products' %}class="active"{% endif %}>Shop</a>
+    </nav>
+    <a href="{{ url_for('cart') }}" class="cart-btn" aria-label="View cart">
+      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/>
+        <line x1="3" y1="6" x2="21" y2="6"/>
+        <path d="M16 10a4 4 0 01-8 0"/>
+      </svg>
+      <span class="cart-label">Cart</span>
+      {% set count = cart_count() %}
+      {% if count > 0 %}
+        <span class="cart-count">{{ count }}</span>
+      {% endif %}
+    </a>
+    <a href="#mobile-nav" class="hamburger" aria-label="Open menu">
+      <span></span><span></span><span></span>
+    </a>
+  </div>
+</header>
+
+<!-- MOBILE NAV -->
+<div class="mobile-nav" id="mobile-nav">
+  <button class="mobile-close" id="mobile-close" aria-label="Close">&times;</button>
+  <a href="{{ url_for('index') }}">Home</a>
+  <a href="{{ url_for('index') }}#features">About</a>
+  <a href="{{ url_for('index') }}#reviews">Reviews</a>
+  <a href="{{ url_for('index') }}#feedback">Feedback</a>
+  <a href="{{ url_for('index') }}#contact">Contact</a>
+  <a href="{{ url_for('products') }}">Shop</a>
+  <a href="{{ url_for('cart') }}">Cart</a>
+</div>
+
+<!-- FLASH MESSAGES -->
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    <div class="flash-messages">
+      {% for category, message in messages %}
+        <div class="flash-msg {{ category }}">{{ message }}</div>
+      {% endfor %}
+    </div>
+  {% endif %}
+{% endwith %}
+
+<!-- PAGE CONTENT -->
+{% block content %}{% endblock %}
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">VENTE</div>
+  <div class="footer-links">
+    <a href="{{ url_for('index') }}">Home</a>
+    <a href="{{ url_for('index') }}#features">About</a>
+    <a href="{{ url_for('index') }}#reviews">Reviews</a>
+    <a href="{{ url_for('index') }}#contact">Contact</a>
+    <a href="{{ url_for('products') }}">Shop</a>
+    <a href="{{ url_for('cart') }}">Cart</a>
+  </div>
+  <p class="footer-copy">&copy; 2026 VENTE Clothing Brand. All rights reserved.</p>
+</footer>
+
+<script>
+  // Mobile nav toggle
+  const mobileNav   = document.getElementById('mobile-nav');
+  const mobileClose = document.getElementById('mobile-close');
+  if (mobileClose) {
+    mobileClose.addEventListener('click', () => mobileNav.classList.remove('open'));
+  }
+  document.querySelectorAll('.mobile-nav a').forEach(l => {
+    l.addEventListener('click', () => mobileNav.classList.remove('open'));
+  });
+  // Handle hamburger (CSS :target + JS fallback)
+  const hamburgerLinks = document.querySelectorAll('.hamburger');
+  hamburgerLinks.forEach(h => {
+    h.addEventListener('click', (e) => {
+      e.preventDefault();
+      mobileNav.classList.add('open');
+    });
+  });
+
+  // Auto-hide flash messages
+  setTimeout(() => {
+    document.querySelectorAll('.flash-msg').forEach(el => {
+      el.style.transition = 'opacity 0.5s';
+      el.style.opacity = '0';
+      setTimeout(() => el.remove(), 500);
+    });
+  }, 3500);
+</script>
+{% block extra_js %}{% endblock %}
+</body>
+</html>

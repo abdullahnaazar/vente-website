@@ -1,0 +1,257 @@
+{% extends "base.html" %}
+{% block title %}VENTE Clothing — 2026 Collection{% endblock %}
+
+{% block extra_css %}
+<style>
+  /* ── HERO ── */
+  .hero {
+    min-height: 100vh; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; text-align: center;
+    padding: 8rem 2rem 4rem; position: relative;
+    background: var(--cream); overflow: hidden;
+  }
+  .hero-bg-text {
+    position: absolute; font-family: var(--serif);
+    font-size: clamp(8rem, 22vw, 22rem); font-weight: 300;
+    color: rgba(14,14,12,0.04); letter-spacing: -0.02em;
+    pointer-events: none; user-select: none; white-space: nowrap;
+    top: 50%; transform: translateY(-50%);
+  }
+  .hero-tag { font-size: 0.72rem; letter-spacing: 0.3em; text-transform: uppercase; color: var(--accent); margin-bottom: 1.5rem; }
+  .hero h1 { font-family: var(--serif); font-size: clamp(3rem, 9vw, 8rem); font-weight: 300; line-height: 0.95; letter-spacing: -0.01em; margin-bottom: 1.5rem; }
+  .hero h1 em { font-style: italic; color: var(--accent); }
+  .hero-sub { font-size: clamp(0.85rem, 2vw, 1rem); letter-spacing: 0.2em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 3rem; }
+  .hero-btns { display: flex; gap: 1rem; flex-wrap: wrap; justify-content: center; }
+  .btn-primary {
+    display: inline-block; padding: 0.95rem 2.4rem; background: var(--black); color: var(--white);
+    text-decoration: none; font-size: 0.78rem; letter-spacing: 0.15em; text-transform: uppercase;
+    border: 1px solid var(--black); transition: background 0.3s, color 0.3s;
+  }
+  .btn-primary:hover { background: var(--accent); border-color: var(--accent); }
+  .btn-outline {
+    display: inline-block; padding: 0.95rem 2.4rem; background: transparent; color: var(--black);
+    text-decoration: none; font-size: 0.78rem; letter-spacing: 0.15em; text-transform: uppercase;
+    border: 1px solid var(--black); transition: background 0.3s, color 0.3s;
+  }
+  .btn-outline:hover { background: var(--black); color: var(--white); }
+  .scroll-hint { position: absolute; bottom: 2.5rem; left: 50%; transform: translateX(-50%); display: flex; flex-direction: column; align-items: center; gap: 8px; color: var(--text-muted); font-size: 0.7rem; letter-spacing: 0.2em; text-transform: uppercase; }
+  .scroll-line { width: 1px; height: 40px; background: linear-gradient(to bottom, var(--accent), transparent); animation: scrollDrop 1.6s 1s ease infinite; }
+
+  /* ── SECTION SHARED ── */
+  section { padding: 6rem 3rem; }
+  .section-label { font-size: 0.68rem; letter-spacing: 0.3em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.8rem; }
+  .section-heading { font-family: var(--serif); font-size: clamp(2rem, 5vw, 3.8rem); font-weight: 300; line-height: 1.1; margin-bottom: 3rem; }
+  .section-heading em { font-style: italic; }
+
+  /* ── FEATURES ── */
+  .features { background: var(--white); }
+  .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 2rem; max-width: 1200px; margin: 0 auto; }
+  .feature-card { padding: 2rem; border: 1px solid rgba(14,14,12,0.1); transition: border-color 0.3s, transform 0.3s; }
+  .feature-card:hover { border-color: var(--accent); transform: translateY(-4px); }
+  .feature-icon { width: 40px; height: 40px; margin-bottom: 1.2rem; color: var(--accent); }
+  .feature-card h3 { font-family: var(--serif); font-size: 1.3rem; font-weight: 400; margin-bottom: 0.5rem; }
+  .feature-card p { font-size: 0.85rem; color: var(--text-muted); line-height: 1.7; }
+
+  /* ── REVIEWS ── */
+  .reviews { background: var(--cream); }
+  .reviews-inner { max-width: 1200px; margin: 0 auto; }
+  .reviews-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1.5rem; }
+  .review-card { background: var(--white); padding: 2rem 1.8rem; border-left: 3px solid var(--accent); }
+  .review-quote { font-family: var(--serif); font-size: 1.15rem; font-weight: 300; font-style: italic; line-height: 1.6; margin-bottom: 1.2rem; color: var(--black); }
+  .review-author { font-size: 0.75rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-muted); }
+  .stars { color: var(--accent); font-size: 0.85rem; margin-bottom: 0.8rem; letter-spacing: 0.1em; }
+
+  /* ── FEEDBACK FORM ── */
+  .feedback { background: var(--black); color: var(--white); }
+  .feedback-inner { max-width: 680px; margin: 0 auto; text-align: center; }
+  .feedback .section-label { color: var(--warm-mid); }
+  .feedback .section-heading { color: var(--white); margin-bottom: 2.5rem; }
+  .form-group { margin-bottom: 1.2rem; text-align: left; }
+  .form-group label { display: block; font-size: 0.72rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--warm-mid); margin-bottom: 0.5rem; }
+  .form-group input, .form-group textarea { width: 100%; background: rgba(247,244,239,0.05); border: 1px solid rgba(247,244,239,0.15); color: var(--white); padding: 0.85rem 1rem; font-family: var(--sans); font-size: 0.9rem; font-weight: 300; outline: none; transition: border-color 0.3s; }
+  .form-group input:focus, .form-group textarea:focus { border-color: var(--accent); }
+  .form-group input::placeholder, .form-group textarea::placeholder { color: rgba(247,244,239,0.3); }
+  .form-group textarea { resize: vertical; min-height: 120px; }
+  .form-submit { margin-top: 1.8rem; }
+  .btn-submit { width: 100%; padding: 1rem; background: var(--accent); color: var(--white); border: none; font-family: var(--sans); font-size: 0.78rem; letter-spacing: 0.2em; text-transform: uppercase; cursor: pointer; transition: opacity 0.3s; }
+  .btn-submit:hover { opacity: 0.85; }
+
+  /* ── CONTACT ── */
+  .contact { background: var(--cream); }
+  .contact-inner { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: start; }
+  .contact-details { display: flex; flex-direction: column; gap: 1.2rem; }
+  .contact-item { display: flex; flex-direction: column; gap: 0.2rem; padding: 1.2rem 0; border-bottom: 1px solid rgba(14,14,12,0.1); }
+  .contact-item-label { font-size: 0.68rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--text-muted); }
+  .contact-item-value { font-family: var(--serif); font-size: 1.15rem; font-weight: 400; color: var(--black); }
+  .contact-item-value a { color: inherit; text-decoration: none; }
+  .contact-item-value a:hover { color: var(--accent); }
+  .contact-map-placeholder { background: rgba(14,14,12,0.06); height: 280px; display: flex; align-items: center; justify-content: center; font-size: 0.78rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--text-muted); border: 1px solid rgba(14,14,12,0.1); }
+
+  /* Contact Form */
+  .contact-form { display: flex; flex-direction: column; gap: 1rem; }
+  .contact-form input, .contact-form textarea {
+    width: 100%; background: var(--white); border: 1px solid rgba(14,14,12,0.15);
+    color: var(--black); padding: 0.85rem 1rem; font-family: var(--sans);
+    font-size: 0.9rem; font-weight: 300; outline: none; transition: border-color 0.3s;
+  }
+  .contact-form input:focus, .contact-form textarea:focus { border-color: var(--accent); }
+  .contact-form textarea { resize: vertical; min-height: 120px; }
+  .btn-contact { padding: 1rem 2rem; background: var(--black); color: var(--white); border: none; font-family: var(--sans); font-size: 0.78rem; letter-spacing: 0.2em; text-transform: uppercase; cursor: pointer; transition: background 0.3s; }
+  .btn-contact:hover { background: var(--accent); }
+
+  @media (max-width: 768px) {
+    section { padding: 4rem 1.5rem; }
+    .contact-inner { grid-template-columns: 1fr; gap: 2rem; }
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+
+<!-- HERO -->
+<section class="hero" id="home">
+  <div class="hero-bg-text" aria-hidden="true">VENTE</div>
+  <p class="hero-tag">2026 Collection &mdash; Now Available</p>
+  <h1>Wear Your <em>Story</em></h1>
+  <p class="hero-sub">Trendy &nbsp;&bull;&nbsp; Stylish &nbsp;&bull;&nbsp; Affordable</p>
+  <div class="hero-btns">
+    <a href="{{ url_for('products') }}" class="btn-primary">Shop Now</a>
+    <a href="#reviews" class="btn-outline">Read Reviews</a>
+  </div>
+  <div class="scroll-hint" aria-hidden="true">
+    <span>Scroll</span>
+    <div class="scroll-line"></div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section class="features" id="features">
+  <div style="max-width:1200px; margin:0 auto;">
+    <p class="section-label">Why VENTE</p>
+    <h2 class="section-heading">Crafted with <em>intention</em>,<br>worn with confidence.</h2>
+    <div class="features-grid">
+      <div class="feature-card">
+        <svg class="feature-icon" viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.5">
+          <circle cx="20" cy="20" r="16"/>
+          <path d="M14 20l4 4 8-8"/>
+        </svg>
+        <h3>Premium Fabric</h3>
+        <p>Carefully sourced materials that feel as good as they look — breathable, durable, and richly textured.</p>
+      </div>
+      <div class="feature-card">
+        <svg class="feature-icon" viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.5">
+          <rect x="8" y="12" width="24" height="18" rx="2"/>
+          <path d="M8 18h24M16 12V8M24 12V8"/>
+        </svg>
+        <h3>Fast Delivery</h3>
+        <p>Orders dispatched within 24 hours. Nationwide coverage with real-time order tracking.</p>
+      </div>
+      <div class="feature-card">
+        <svg class="feature-icon" viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path d="M20 6l3.6 7.3L32 14.6l-6 5.8 1.4 8.2L20 25l-7.4 3.6 1.4-8.2-6-5.8 8.4-1.3z"/>
+        </svg>
+        <h3>Everyday Style</h3>
+        <p>Designs that transition from morning commute to evening out — versatile and effortlessly on-trend.</p>
+      </div>
+      <div class="feature-card">
+        <svg class="feature-icon" viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path d="M20 34s-13-8-13-18a13 13 0 0126 0c0 10-13 18-13 18z"/>
+          <circle cx="20" cy="16" r="4"/>
+        </svg>
+        <h3>Made in Pakistan</h3>
+        <p>Proudly Pakistani. Each piece supports local artisans and reflects our rich textile heritage.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- REVIEWS -->
+<section class="reviews" id="reviews">
+  <div class="reviews-inner">
+    <p class="section-label">Customer Voices</p>
+    <h2 class="section-heading">What they're <em>saying</em></h2>
+    <div class="reviews-grid">
+      <div class="review-card">
+        <div class="stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+        <p class="review-quote">"Amazing quality — I've never felt this comfortable in everyday clothes. VENTE has set the bar."</p>
+        <p class="review-author">Miss Khizra Javed &mdash; Lahore</p>
+      </div>
+      <div class="review-card">
+        <div class="stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+        <p class="review-quote">"Fast delivery and the fabric is just beautiful. Exactly as described, honestly exceeded my expectations."</p>
+        <p class="review-author">Miss Taliah &mdash; Lahore</p>
+      </div>
+      <div class="review-card">
+        <div class="stars">&#9733;&#9733;&#9733;&#9733;&#9734;</div>
+        <p class="review-quote">"The best clothing brand for everyday wear. Affordable, stylish, and always fresh designs."</p>
+        <p class="review-author">Miss Laiba &mdash; Lahore</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FEEDBACK FORM -->
+<section class="feedback" id="feedback">
+  <div class="feedback-inner">
+    <p class="section-label">Share Your Thoughts</p>
+    <h2 class="section-heading">Leave us <em>feedback</em></h2>
+    <form action="{{ url_for('feedback') }}" method="POST">
+      <div class="form-group">
+        <label for="f-name">Your Name</label>
+        <input type="text" id="f-name" name="name" placeholder="e.g. Abdullah Naazar" autocomplete="name" required/>
+      </div>
+      <div class="form-group">
+        <label for="f-email">Email Address</label>
+        <input type="email" id="f-email" name="email" placeholder="you@email.com" autocomplete="email" required/>
+      </div>
+      <div class="form-group">
+        <label for="f-msg">Your Feedback</label>
+        <textarea id="f-msg" name="message" placeholder="Tell us about your experience..." required></textarea>
+      </div>
+      <div class="form-submit">
+        <button type="submit" class="btn-submit">Submit Feedback</button>
+      </div>
+    </form>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section class="contact" id="contact">
+  <div class="contact-inner">
+    <div>
+      <p class="section-label">Get in Touch</p>
+      <h2 class="section-heading">We'd love to <em>hear</em> from you</h2>
+      <div class="contact-details">
+        <div class="contact-item">
+          <span class="contact-item-label">Team</span>
+          <span class="contact-item-value">Abdullah Naazar, Saleha Abdul Sami, Khadeeja Shafqat, Abdul Manan</span>
+        </div>
+        <div class="contact-item">
+          <span class="contact-item-label">Email</span>
+          <span class="contact-item-value"><a href="mailto:abdullahnazar7890@email.com">abdullahnazar7890@email.com</a></span>
+        </div>
+        <div class="contact-item">
+          <span class="contact-item-label">Phone</span>
+          <span class="contact-item-value"><a href="tel:+923304327469">0330-4327469</a></span>
+        </div>
+        <div class="contact-item">
+          <span class="contact-item-label">Hours</span>
+          <span class="contact-item-value">Mon – Sat &nbsp;/&nbsp; 10am – 7pm</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Contact Form -->
+    <div>
+      <form class="contact-form" action="{{ url_for('contact') }}" method="POST">
+        <input type="text"  name="name"    placeholder="Your Name *"      required/>
+        <input type="email" name="email"   placeholder="Email Address *"   required/>
+        <input type="tel"   name="phone"   placeholder="Phone (optional)"/>
+        <textarea           name="message" placeholder="Your Message *"    required></textarea>
+        <button type="submit" class="btn-contact">Send Message</button>
+      </form>
+    </div>
+  </div>
+</section>
+
+{% endblock %}
